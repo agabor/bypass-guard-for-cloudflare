@@ -15,6 +15,10 @@ class Bypass_Guard_Plugin {
 	}
 
 	public static function check_request(): void {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
+
 		$stored_token = get_option( 'bypass_guard_token' );
 
 		if ( empty( $stored_token ) ) {
