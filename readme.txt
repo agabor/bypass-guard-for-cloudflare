@@ -1,8 +1,8 @@
 === Bypass Guard for Cloudflare ===
 Contributors: gaborangyal
 Tags: cloudflare, security, firewall, origin, header
-Requires at least: 6.0
-Tested up to: 6.9
+Requires at least: 6.2
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later

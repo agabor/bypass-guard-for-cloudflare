@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/agabor/bypass-guard-for-cloudflare
  * Description: Blocks requests that bypass Cloudflare by requiring a secret token header. For hosts that offer no stronger origin protection.
  * Version: 1.0.0
- * Requires at least: 6.0
+ * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: Gabor Angyal
  * License: GPLv2 or later

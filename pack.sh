@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PLUGIN_SLUG="bypass-guard"
+PLUGIN_SLUG="bypass-guard-for-cloudflare"
 BUILD_DIR="build"
 PACKAGE_DIR="$BUILD_DIR/$PLUGIN_SLUG"
 ZIP_NAME="$PLUGIN_SLUG.zip"
@@ -14,7 +14,7 @@ mkdir -p "$PACKAGE_DIR"
 rsync -av \
   --exclude='.*' \
   --exclude='build' \
-  --exclude="$ZIP_NAME" \
+  --exclude='*.zip' \
   --exclude='pack.sh' \
   ./ "$PACKAGE_DIR/"
 

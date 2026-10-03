@@ -59,7 +59,8 @@ class Bypass_Guard_Logger {
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $table_name ORDER BY logged_at DESC, id DESC LIMIT %d",
+				'SELECT * FROM %i ORDER BY logged_at DESC, id DESC LIMIT %d',
+				$table_name,
 				$limit
 			),
 			ARRAY_A
@@ -73,7 +74,9 @@ class Bypass_Guard_Logger {
 
 		$table_name = self::get_table_name();
 
-		$wpdb->query( "TRUNCATE TABLE $table_name" );
+		$wpdb->query(
+			$wpdb->prepare( 'TRUNCATE TABLE %i', $table_name )
+		);
 	}
 
 	private static function trim_log(): void {
@@ -81,14 +84,17 @@ class Bypass_Guard_Logger {
 
 		$table_name = self::get_table_name();
 
-		$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( 'SELECT COUNT(*) FROM %i', $table_name )
+		);
 
 		if ( $count > BYPASS_GUARD_LOG_LIMIT ) {
 			$delete_count = $count - BYPASS_GUARD_LOG_LIMIT;
 
 			$wpdb->query(
 				$wpdb->prepare(
-					"DELETE FROM $table_name ORDER BY id ASC LIMIT %d",
+					'DELETE FROM %i ORDER BY id ASC LIMIT %d',
+					$table_name,
 					$delete_count
 				)
 			);
