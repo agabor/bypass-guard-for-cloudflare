@@ -19,7 +19,9 @@ class Bypass_Guard_Settings_Page {
 		echo '<div class="wrap bypass-guard-wrap">';
 		echo '<h1>' . esc_html__( 'Bypass Guard for Cloudflare', 'bypass-guard-for-cloudflare' ) . '</h1>';
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['bypass_guard_status'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$status = sanitize_text_field( wp_unslash( $_GET['bypass_guard_status'] ) );
 			self::render_status_notice( $status );
 		}
