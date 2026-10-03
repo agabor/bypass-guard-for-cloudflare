@@ -28,5 +28,6 @@ require_once BYPASS_GUARD_PLUGIN_DIR . 'includes/class-bypass-guard-plugin.php';
 require_once BYPASS_GUARD_PLUGIN_DIR . 'includes/class-bypass-guard-settings-page.php';
 
 register_activation_hook( __FILE__, array( 'Bypass_Guard_Activator', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Bypass_Guard_Activator', 'deactivate' ) );
 
 Bypass_Guard_Plugin::init();

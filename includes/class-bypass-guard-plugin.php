@@ -9,9 +9,11 @@ class Bypass_Guard_Plugin {
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'check_request' ), 0 );
 		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
 		add_action( 'admin_post_bypass_guard_enable', array( __CLASS__, 'handle_post_actions' ) );
 		add_action( 'admin_post_bypass_guard_disable', array( __CLASS__, 'handle_post_actions' ) );
 		add_action( 'admin_post_bypass_guard_clear_log', array( __CLASS__, 'handle_post_actions' ) );
+		add_action( 'admin_post_bypass_guard_regenerate_token', array( __CLASS__, 'handle_post_actions' ) );
 	}
 
 	public static function check_request(): void {
@@ -87,6 +89,27 @@ class Bypass_Guard_Plugin {
 		);
 	}
 
+	public static function enqueue_admin_assets( string $hook ): void {
+		if ( 'settings_page_bypass-guard-for-cloudflare' !== $hook ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'bypass-guard-admin',
+			plugins_url( 'assets/css/bypass-guard-admin.css', BYPASS_GUARD_PLUGIN_FILE ),
+			array(),
+			BYPASS_GUARD_VERSION
+		);
+
+		wp_enqueue_script(
+			'bypass-guard-admin',
+			plugins_url( 'assets/js/bypass-guard-admin.js', BYPASS_GUARD_PLUGIN_FILE ),
+			array(),
+			BYPASS_GUARD_VERSION,
+			true
+		);
+	}
+
 	public static function handle_post_actions(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to perform this action.', 'bypass-guard-for-cloudflare' ) );
@@ -115,6 +138,17 @@ class Bypass_Guard_Plugin {
 			case 'admin_post_bypass_guard_clear_log':
 				Bypass_Guard_Logger::clear_log();
 				$status = 'cleared';
+				break;
+
+			case 'admin_post_bypass_guard_regenerate_token':
+				if ( ! get_option( 'bypass_guard_filter_enabled' ) ) {
+					$new_token = Bypass_Guard_Activator::generate_token();
+					update_option( 'bypass_guard_token', $new_token );
+					update_option( 'bypass_guard_header_detected', false );
+					$status = 'regenerated';
+				} else {
+					$status = 'regenerate_error';
+				}
 				break;
 		}
 
