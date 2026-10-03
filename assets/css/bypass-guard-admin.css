@@ -1,0 +1,98 @@
+.bypass-guard-wrap {
+	max-width: 960px;
+	margin-top: 20px;
+}
+
+.bypass-guard-wrap h1 {
+	margin-bottom: 20px;
+}
+
+.bypass-guard-card {
+	background: #fff;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.06 );
+	padding: 24px 28px;
+	margin-bottom: 20px;
+}
+
+.bypass-guard-card h2 {
+	margin-top: 0;
+	font-size: 18px;
+	border-bottom: 1px solid #f0f0f1;
+	padding-bottom: 12px;
+	margin-bottom: 16px;
+}
+
+.bypass-guard-card h3 {
+	margin-bottom: 6px;
+}
+
+.bypass-guard-divider {
+	border: none;
+	border-top: 1px solid #f0f0f1;
+	margin: 24px 0;
+}
+
+.bypass-guard-badge {
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.bypass-guard-badge-success {
+	background: #e5f8ea;
+	color: #1a7f37;
+}
+
+.bypass-guard-badge-error {
+	background: #fde8e8;
+	color: #b32d2e;
+}
+
+.bypass-guard-copy-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bypass-guard-copy-row code {
+	background: #f6f7f7;
+	padding: 6px 10px;
+	border-radius: 4px;
+	word-break: break-all;
+}
+
+.bypass-guard-copy-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	white-space: nowrap;
+}
+
+.bypass-guard-copy-btn.copied {
+	background: #1a7f37 !important;
+	border-color: #1a7f37 !important;
+	color: #fff !important;
+}
+
+.bypass-guard-setup-guide .bypass-guard-steps {
+	margin-left: 20px;
+}
+
+.bypass-guard-steps li {
+	margin-bottom: 14px;
+	line-height: 1.6;
+}
+
+.bypass-guard-steps .bypass-guard-copy-row {
+	margin-top: 8px;
+}
+
+.bypass-guard-clear-log-form {
+	margin-bottom: 16px;
+}
