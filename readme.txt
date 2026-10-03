@@ -2,7 +2,7 @@
 Contributors: gaborangyal
 Tags: cloudflare, security, firewall, origin, header
 Requires at least: 6.2
-Tested up to: 7.1
+Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -24,6 +24,20 @@ Bypass Guard for Cloudflare closes that gap with a shared secret. You configure 
 4. Once the header is detected, you can enable the filter. From then on, requests without the correct token receive a 403 Forbidden response.
 
 The filter cannot be enabled until the header has been detected. This prevents you from locking yourself out of your own site by enabling it before Cloudflare is configured.
+
+While the header has not been detected yet, the settings page shows a step by step Cloudflare setup guide with copy buttons for the header name and the token, so you can paste both values straight into the Transform Rule.
+
+**Regenerating the token**
+
+The settings page can generate a new random token at any time while the filter is disabled. This is useful if the token has been exposed, or if you want to rotate it periodically.
+
+Regenerating the token resets the header detection status, because Cloudflare is still sending the old value. Update your Cloudflare Transform Rule with the new token, reload the settings page until the header is detected again, then enable the filter.
+
+To avoid locking you out, the token cannot be regenerated while the filter is enabled. Disable the filter first.
+
+**Deactivating the plugin**
+
+Deactivating the plugin disables the filter, and activating it again leaves the filter disabled. Your token and your log are kept, so you can enable the filter again once you have confirmed that the header is still detected.
 
 **Logging blocked requests**
 
@@ -55,6 +69,7 @@ Because this is a WordPress plugin, it can only filter requests that WordPress i
 
 * **Static files** such as images, CSS, JavaScript and uploads are usually served directly by the web server without loading WordPress, so they remain accessible directly.
 * **Page caching** that serves pages before WordPress plugins load is not filtered. This includes caching plugins that use an `advanced-cache.php` drop-in, as well as server-level caches such as LiteSpeed Cache, Varnish or nginx FastCGI cache. Cached pages may still be served to direct requests.
+* **WP-CLI commands are never filtered**, so you keep command line access to your site even when the filter is enabled.
 * **The token is a shared secret.** Anyone who learns it can bypass Cloudflare. It is visible to site administrators, to anyone with access to your database, and to anyone with access to your Cloudflare account.
 
 If you can edit your server configuration or `.htaccess` file, checking the header there as well will also cover static files and cached pages.
@@ -72,7 +87,7 @@ Bypass Guard for Cloudflare is an independent, open source project. It is not af
 == Installation ==
 
 1. Install and activate the plugin from the Plugins screen, or upload the `bypass-guard-for-cloudflare` folder to `/wp-content/plugins/` and activate it.
-2. Go to the plugin's settings page and copy the generated token.
+2. Go to **Settings → Bypass Guard** and copy the generated token.
 3. In the Cloudflare dashboard, open your site (zone) and go to **Rules → Overview**.
 4. Select **Create rule → Request Header Transform Rule**.
 5. Give the rule a name, for example "Bypass Guard".
@@ -102,6 +117,8 @@ They are enforced by your web server or network before any request reaches WordP
 
 Connect to your site using FTP, SFTP or your hosting control panel's file manager, and rename the folder `/wp-content/plugins/bypass-guard-for-cloudflare` to something else, such as `bypass-guard-for-cloudflare-disabled`. WordPress will deactivate the plugin automatically. Fix your Cloudflare rule, rename the folder back and reactivate the plugin.
 
+If you have WP-CLI access, you can also run `wp plugin deactivate bypass-guard-for-cloudflare`. WP-CLI requests are never filtered by the plugin.
+
 = Why does the settings page say the header was not detected? =
 
 Check that:
@@ -112,6 +129,18 @@ Check that:
 * The site's DNS records are proxied (orange cloud).
 
 Some hosting environments place their own proxy in front of WordPress that may remove unfamiliar headers. If the header never arrives despite a correct Cloudflare rule, ask your host whether custom request headers are passed through.
+
+= How do I change the token? =
+
+Disable the filter on the settings page, then select **Regenerate Token**. The plugin creates a new random token and resets the header detection status. Update the value in your Cloudflare Transform Rule, reload the settings page until the header is detected again, then enable the filter.
+
+= Why is the Regenerate Token button missing? =
+
+It is only shown while the filter is disabled. Regenerating the token while the filter is active would immediately block every request, including your own, because Cloudflare would still be sending the old value.
+
+= Does deactivating the plugin keep my settings? =
+
+Yes. Your token and the blocked requests log are kept. The filter is turned off when the plugin is deactivated and stays off when you activate it again, so you can verify that the header is still detected before enabling it.
 
 = Will this block WP-Cron, Site Health or other loopback requests? =
 
@@ -134,6 +163,8 @@ The token is a random value that is compared in constant time. However, it is a 
 = 1.0.0 =
 * Initial release.
 * Token generation, header detection and request filtering.
+* Token regeneration while the filter is disabled.
+* Built-in Cloudflare setup guide with copy buttons for the header name and token.
 * Logging of blocked requests, limited to the most recent 500 entries.
 
 == Upgrade Notice ==
